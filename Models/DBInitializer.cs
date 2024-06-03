@@ -18,6 +18,22 @@
                 // Guardar los cambios en la base de datos
                 context.SaveChanges();
             }
+
+            if (!context.Accounts.Any())
+            {
+                Client eduClient = context.Clients.FirstOrDefault(cl => cl.Email == "edu@gmail.com");
+                if(eduClient != null)
+                {
+                    var eduAccounts = new Account[]
+                    {
+                        new Account{Number="VIN001",CreationDate=DateTime.Now,Balance=100000,ClientId=eduClient.Id},
+                        new Account{Number="VIN002",CreationDate=DateTime.Now,Balance=200000,ClientId=eduClient.Id}
+                    };
+
+                    context.Accounts.AddRange(eduAccounts);
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

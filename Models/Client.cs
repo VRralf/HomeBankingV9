@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace HomeBankingV9.Models
+﻿namespace HomeBankingV9.Models
 {
     public class Client
     {
@@ -9,5 +7,6 @@ namespace HomeBankingV9.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public ICollection<Account> Accounts { get; set; }
     }
 }
