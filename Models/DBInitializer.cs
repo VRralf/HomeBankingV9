@@ -34,6 +34,22 @@
                     context.SaveChanges();
                 }
             }
+            if (!context.Transactions.Any())
+            {
+                Account account1 = context.Accounts.FirstOrDefault(a => a.Number == "VIN001");
+                if (account1 != null)
+                {
+
+                    var transactions = new Transaction[]
+                     {
+                        new Transaction{Type=TransactionType.CREDIT.ToString(),Amount=10000,Description="Deposito",Date=DateTime.Now.AddHours(-5),AccountId=account1.Id},
+                        new Transaction{Type=TransactionType.DEBIT.ToString(),Amount=5000,Description="Retiro",Date=DateTime.Now.AddHours(-6),AccountId=account1.Id},
+                        new Transaction{Type=TransactionType.CREDIT.ToString(),Amount=20000,Description="Deposito",Date=DateTime.Now.AddHours(-4),AccountId=account1.Id}
+                    };
+                    context.Transactions.AddRange(transactions);
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }
