@@ -105,6 +105,38 @@
                     context.SaveChanges();
                 }
             }
+            if (!context.Cards.Any())
+            {
+                Client client = context.Clients.FirstOrDefault(c => c.Email == "edu@gmail.com");
+                if (client != null)
+                {
+                    var cards = new Card[]
+                    {
+                        new Card {
+                            ClientId= client.Id,
+                            CardHolder = client.FirstName + " " + client.LastName,
+                            Type = CardType.DEBIT.ToString(),
+                            Color = CardColor.GOLD.ToString(),
+                            Number = "3325-6745-7876-4445",
+                            Cvv = 990,
+                            FromDate= DateTime.Now,
+                            ThruDate= DateTime.Now.AddYears(4),
+                        },
+                        new Card {
+                            ClientId= client.Id,
+                            CardHolder = client.FirstName + " " + client.LastName,
+                            Type = CardType.CREDIT.ToString(),
+                            Color = CardColor.TITANIUM.ToString(),
+                            Number = "2234-6745-552-7888",
+                            Cvv = 750,
+                            FromDate= DateTime.Now,
+                            ThruDate= DateTime.Now.AddYears(5),
+                        },
+                    };
+                    context.Cards.AddRange(cards);
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }
