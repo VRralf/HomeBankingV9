@@ -21,5 +21,11 @@ namespace HomeBankingV9.DTOs
             Loans = client.ClientLoans.Select(cl => new ClientLoanDTO(cl)).ToList();
             Cards = client.Cards.Select(c => new CardDTO(c)).ToList();
         }
+        public ClientDTO(NewClientDTO newClientDTO)
+        {
+            FirstName = newClientDTO.FirstName;
+            LastName = newClientDTO.LastName;
+            Email = newClientDTO.Email;
+        }
     }
 }

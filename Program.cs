@@ -1,12 +1,18 @@
 using HomeBankingV9.Models;
 using HomeBankingV9.Repositories;
 using HomeBankingV9.Repositories.Implementations;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+// Add Swagger to the container.
+builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();
 
 // Add context to the container.
 builder.Services.AddDbContext<HomeBankingContext>(
@@ -16,6 +22,21 @@ builder.Services.AddDbContext<HomeBankingContext>(
 // Add repositories to the container.
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
+// Add authentication to the container.
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(op =>
+        {
+            op.LoginPath = "/index.html";
+            op.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+        });
+
+// Add authorization to the container.
+builder.Services.AddAuthorization(op =>
+{
+    op.AddPolicy("ClientOnly", policy => policy.RequireClaim("Client"));
+    op.AddPolicy("AdminOnly", policy => policy.RequireClaim("Admin"));
+});
 
 var app = builder.Build();
 
@@ -39,6 +60,10 @@ using (var scope = app.Services.CreateScope())
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
+} else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 app.UseStaticFiles();
 
@@ -46,6 +71,7 @@ app.UseRouting();
 
 app.MapControllers();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

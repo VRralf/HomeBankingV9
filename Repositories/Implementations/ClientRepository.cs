@@ -9,6 +9,16 @@ namespace HomeBankingV9.Repositories.Implementations
         {
         }
 
+        public Client FindByEmail(string email)
+        {
+            return FindByCondition(c => c.Email.ToLower() == email.ToLower())
+                .Include(c => c.Accounts)
+                .Include(c => c.ClientLoans)
+                .ThenInclude(cl => cl.Loan)
+                .Include(c => c.Cards)
+                .FirstOrDefault();
+        }
+
         public Client FindById(long id)
         {
             return FindByCondition(c => c.Id == id)
